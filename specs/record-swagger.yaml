@@ -1,0 +1,6 @@
+openapi: 3.0.0
+info:
+  title: Microservices API
+servers:
+  - url: http://localhost
+    description: Local Server

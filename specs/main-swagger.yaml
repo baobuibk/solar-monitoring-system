@@ -1,0 +1,204 @@
+openapi: 3.0.0
+info:
+  title: Main API
+servers:
+  - url: http://localhost
+    description: Local Server
+paths:
+  /entity:
+    servers:
+      - url: http://localhost:8000
+        description: Context Broker
+    post:
+      summary: Add one entity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EntityCreator"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Entity"
+    get:
+      summary: Return many entities
+      parameters:
+        - $ref: "#/components/parameters/filter"
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/options"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Entity"
+  /entity/{entityId}:
+    servers:
+      - url: http://localhost:8000
+        description: Context Broker
+    parameters:
+      - $ref: "#/components/parameters/entityId"
+      - $ref: "#/components/parameters/fields"
+      - $ref: "#/components/parameters/options"
+    get:
+      summary: Get one entity by id
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Entity"
+    patch:
+      summary: Update one entity by id
+      responses:
+        "200":
+          description: OK
+    delete:
+      summary: Delete one entity by id
+      responses:
+        "200":
+          description: OK
+  /telemetry/{gatewayId}:
+    servers:
+      - url: http://localhost:8003
+        description: MQTT Agent
+    post:
+      summary: Telemetry from gateway using HTTP
+      responses:
+        "200":
+          description: OK
+  /command/{gatewayId}:
+    servers:
+      - url: http://localhost:8003
+        description: MQTT Agent
+    post:
+      summary: Send command to gateway
+      responses:
+        "200":
+          description: OK
+  /provision/{gatewayId}/begin:
+    servers:
+      - url: http://localhost:8003
+        description: MQTT Agent
+    post:
+      summary: Start provision for gateway
+      responses:
+        "200":
+          description: OK
+  /provision/{gatewayId}:
+    servers:
+      - url: http://localhost:8003
+        description: MQTT Agent
+    post:
+      summary: Provision from gateway using HTTP
+      responses:
+        "200":
+          description: OK
+components:
+  parameters:
+    entityId:
+      in: path
+      name: entityId
+      schema:
+        $ref: "#/components/schemas/entityId"
+      required: true
+      description: A 24-character string value, hexadecimal representation of the 12-byte ObjectId of entity.
+    filter:
+      in: query
+      name: filter
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties:
+              oneOf:
+                - type: string
+                - type: number
+                - type: boolean
+            example:
+              type: "Gateway"
+              name: "Gateway 1"
+      description: JSON string of key-value pairs of fields to find.
+    fields:
+      in: query
+      name: fields
+      schema:
+        type: string
+        example: name,type
+      description: Comma-separated string of names of fields of entity.
+    options:
+      in: query
+      name: options
+      schema:
+        type: string
+        example: valueOnly
+      deprecated: true
+      description: Has no effect now. May be utilized in the future.
+  schemas:
+    entityId:
+      type: string
+      minLength: 24
+      maxLength: 24
+      example: 62cd32a8eeaf0d180d0f54f3
+    stringField:
+      type: object
+      required: [type, value]
+      properties:
+        type:
+          type: string
+          enum: [string]
+        value:
+          type: string
+    numberField:
+      type: object
+      required: [type, value]
+      properties:
+        type:
+          type: string
+          enum: [number]
+        value:
+          type: number
+    booleanField:
+      type: object
+      required: [type, value]
+      properties:
+        type:
+          type: string
+          enum: [boolean]
+        value:
+          type: boolean
+    EntityCreator:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          $ref: "#/components/schemas/stringField"
+      additionalProperties:
+        oneOf:
+          - $ref: "#/components/schemas/stringField"
+          - $ref: "#/components/schemas/numberField"
+          - $ref: "#/components/schemas/booleanField"
+    Entity:
+      type: object
+      required: [type, _id, id]
+      properties:
+        type:
+          $ref: "#/components/schemas/booleanField"
+        id:
+          $ref: "#/components/schemas/entityId"
+        _id:
+          $ref: "#/components/schemas/entityId"
+      additionalProperties:
+        oneOf:
+          - $ref: "#/components/schemas/stringField"
+          - $ref: "#/components/schemas/numberField"
+          - $ref: "#/components/schemas/booleanField"
