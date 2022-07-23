@@ -1,0 +1,8 @@
+Trong một hệ thống IoT nói chung,
+solar nói riêng, có rất nhiều loại thiết bị,
+cảm biến, hay thực thể.
+
+Mỗi cảm biến, thiết bị lại có thông số, thuộc tính,
+đại lượng đo riêng
+
+để có thể dùng tất cả trường hợp, model theo kiểu entity
