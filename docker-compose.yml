@@ -1,0 +1,68 @@
+version: "3.7"
+
+services:
+  context-broker:
+    image: context-broker
+    # command: sh -c "npm install && npm start"
+    ports:
+      - 8000:8000
+    environment:
+      - PORT=8000
+      - DB_URI=mongodb://mongo:27017
+      - DB_NAME=solar
+      - DB_TIMEOUT_MS=10000
+
+  record-engine:
+    image: record-engine
+    ports:
+      - 8001:8001
+    environment:
+      - PORT=8001
+      - DB_URI=mongodb://mongo:27017
+      - DB_NAME=solar
+      - DB_TIMEOUT_MS=10000
+
+  mqtt-agent:
+    image: mqtt-agent
+    ports:
+      - 8003:8003
+    environment:
+      - PORT=8003
+      - MQTT_BROKER_URL=mqtt://mqtt
+      - REDIS_URL=redis://redis
+      - CONTEXT_BROKER_URL=http://context-broker:8000
+      - PROVISION_TIMEOUT=129
+
+  monitoring-backend:
+    image: monitoring-backend
+    ports:
+      - 8002:8002
+    environment:
+      - PORT=8002
+      - SECRET=topsecret
+      - DB_URI=mongodb://mongo:27017
+      - DB_NAME=solar
+      - DB_TIMEOUT_MS=10000
+      - CONTEXT_BROKER_URL=http://context-broker:8000
+      - RECORD_ENGINE_URL=http://record-engine:8001
+
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+
+  mqtt:
+    image: eclipse-mosquitto:1.6
+    ports:
+      - 1883:1883
+    # image: emqx/emqx
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+
+volumes:
+  mongo-data:
