@@ -1,10 +1,10 @@
-Project main repo
+This is the main repo for solar-monitoring-system project.
 
-Download this repo to see the documentation
+Read documentation by clone this repo
 
-After download
-
-```
+```bash
+git clone https://github.com/baobuibk/solar-monitoring-system
+cd solar-monitoring-system
 cd website
 npm install
 npm start
