@@ -12,6 +12,4 @@ sidebar_position: 0
 
 ## Server Status
 
-IP address is [95.111.202.121](http://95.111.202.121)
-
-Monitor [MongoDB](https://cloud.mongodb.com/freemonitoring/cluster/BNP6PTSSFDR46NB35YYWU2IQ6LWEJPQ7)
+IP address is [95.111.201.43](http:///95.111.201.43)

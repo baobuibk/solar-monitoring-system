@@ -7,7 +7,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Solar Monitoring System",
-  tagline: "Solar Monitoring System tagline",
+  tagline: "Powered by PTN209B3 IoT Platform",
   url: "https://your-docusaurus-test-site.com",
   baseUrl: "/",
   onBrokenLinks: "throw",
@@ -32,20 +32,7 @@ const config = {
       "classic",
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
-        docs: {
-          sidebarPath: require.resolve("./sidebars.js"),
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          // editUrl:
-          //   "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
-        },
-        // blog: {
-        //   showReadingTime: true,
-        //   // Please change this to your repo.
-        //   // Remove this to remove the "edit this page" links.
-        //   editUrl:
-        //     "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
-        // },
+        docs: { sidebarPath: require.resolve("./sidebars.js") },
         blog: false,
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
@@ -66,13 +53,12 @@ const config = {
         items: [
           {
             type: "doc",
-            docId: "index",
+            docId: "intro",
             position: "left",
-            label: "Docs",
+            label: "Tutorial",
           },
-          // { to: "/blog", label: "Blog", position: "left" },
           {
-            href: "https://github.com/facebook/docusaurus",
+            href: "https://github.com/baobuibk/solar-monitoring-system",
             label: "GitHub",
             position: "right",
           },
@@ -111,17 +97,13 @@ const config = {
             title: "More",
             items: [
               {
-                label: "Blog",
-                to: "/blog",
-              },
-              {
                 label: "GitHub",
-                href: "https://github.com/facebook/docusaurus",
+                href: "https://github.com/baobuibk/solar-monitoring-system",
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} Solar Monitoring System, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Solar Monitoring System. Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,
