@@ -46,21 +46,21 @@ services:
 
   mongo:
     image: mongo
-    ports:
-      - 27017:27017
+    # ports:
+    #   - 27017:27017
     volumes:
       - mongo-data:/data/db
 
   mqtt:
     image: eclipse-mosquitto:1.6
+    # image: emqx/emqx
     ports:
       - 1883:1883
-    # image: emqx/emqx
 
   redis:
     image: redis
-    ports:
-      - 6379:6379
+    # ports:
+    #   - 6379:6379
 
 volumes:
   mongo-data:
