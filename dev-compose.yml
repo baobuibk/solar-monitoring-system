@@ -1,6 +1,10 @@
 services:
   context-broker:
-    image: context-broker
+    image: node:lts-alpine
+    command: sh -c "npm install && nodemon src/index.js"
+    working_dir: /home/node/app
+    volumes:
+      - ../context-broker/:/home/node/app/
 
     ports:
       - 8000:8000
@@ -20,7 +24,11 @@ services:
   #     - DB_TIMEOUT_MS=10000
 
   mqtt-agent:
-    image: mqtt-agent
+    image: node:lts-alpine
+    command: sh -c "npm install && nodemon src/index.js"
+    working_dir: /home/node/app
+    volumes:
+      - ../mqtt-agent/:/home/node/app/
 
     ports:
       - 8003:8003
@@ -49,7 +57,7 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - mongo-data:/data/db
+      - dev-mongo-data:/data/db
 
   mqtt:
     image: eclipse-mosquitto:1.6
@@ -63,4 +71,4 @@ services:
       - 6379:6379
 
 volumes:
-  mongo-data:
+  dev-mongo-data:
