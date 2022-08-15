@@ -1,27 +1,40 @@
 services:
   context-broker:
-    image: context-broker
-
+    container_name: context-broker
+    volumes:
+      - ../context-broker:/home/node/app
+    image: node:lts-alpine
+    working_dir: /home/node/app
+    command: sh -c "npm install && npm start"
     ports:
       - 8000:8000
     environment:
       - CONTEXT_BROKER_PORT=8000
-      - MONGO_HOST=mongo
       - DB_NAME=solar
+      - MONGO_HOST=mongo
 
-  # record-engine:
-  #   image: record-engine
-  #   ports:
-  #     - 8001:8001
-  #   environment:
-  #     - PORT=8001
-  #     - DB_URI=mongodb://mongo:27017
-  #     - DB_NAME=solar
-  #     - DB_TIMEOUT_MS=10000
+  record-engine:
+    container_name: record-engine
+    volumes:
+      - ../record-engine:/home/node/app
+    image: node:lts-alpine
+    working_dir: /home/node/app
+    command: sh -c "npm install && npm start"
+    ports:
+      - 8001:8001
+    environment:
+      - RECORD_ENGINE_PORT=8001
+      - DB_NAME=solar
+      - MONGO_HOST=mongo
+      - REDIS_HOST=redis
 
   mqtt-agent:
-    image: mqtt-agent
-
+    container_name: mqtt-agent
+    volumes:
+      - ../mqtt-agent:/home/node/app
+    image: node:lts-alpine
+    working_dir: /home/node/app
+    command: sh -c "npm install && npm start"
     ports:
       - 8003:8003
     environment:
@@ -31,36 +44,45 @@ services:
       - CONTEXT_BROKER_PORT=8000
       - REDIS_HOST=redis
 
-  # monitoring-backend:
-  #   image: monitoring-backend
-  #   ports:
-  #     - 8002:8002
-  #   environment:
-  #     - PORT=8002
-  #     - SECRET=topsecret
-  #     - DB_URI=mongodb://mongo:27017
-  #     - DB_NAME=solar
-  #     - DB_TIMEOUT_MS=10000
-  #     - CONTEXT_BROKER_URL=http://context-broker:8000
-  #     - RECORD_ENGINE_URL=http://record-engine:8001
+  monitoring-backend:
+    container_name: monitoring-backend
+    volumes:
+      - ../monitoring-backend:/home/node/app
+    image: node:lts-alpine
+    working_dir: /home/node/app
+    command: sh -c "npm install && npm start"
+    ports:
+      - 8002:8002
+    environment:
+      - SECRET=topsecret
+      - MONITORING_BACKEND_PORT=8002
+      - DB_NAME=solar
+      - MONGO_HOST=mongo
+      - REDIS_HOST=redis
+      - CONTEXT_BROKER_HOST=context-broker
+      - CONTEXT_BROKER_PORT=8000
+      - RECORD_ENGINE_HOST=record-engine
+      - RECORD_ENGINE_PORT=8001
 
   mongo:
-    image: mongo
-    # ports:
-    #   - 27017:27017
+    container_name: mongo
     volumes:
       - mongo-data:/data/db
+    image: mongo
+    ports:
+      - 27017:27017
 
   mqtt:
+    container_name: mqtt
     image: eclipse-mosquitto:1.6
-    # image: emqx/emqx
     ports:
       - 1883:1883
 
   redis:
+    container_name: redis
     image: redis
-    # ports:
-    #   - 6379:6379
+    ports:
+      - 6379:6379
 
 volumes:
   mongo-data:
